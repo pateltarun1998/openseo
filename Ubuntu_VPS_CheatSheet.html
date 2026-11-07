@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ubuntu VPS Development & Linux Cheat Sheet</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #24292f;
+    background-color: #ffffff;
+    line-height: 1.6;
+    margin: 40px auto;
+    max-width: 900px;
+    padding: 0 20px;
+  }
+  h1 {
+    color: #0969da;
+    border-bottom: 2px solid #eaecef;
+    padding-bottom: 10px;
+  }
+  h2 {
+    color: #1f2328;
+    border-bottom: 1px solid #d0d7de;
+    padding-bottom: 6px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #24292f;
+    margin-top: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+  th, td {
+    border: 1px solid #d0d7de;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 14px;
+  }
+  th {
+    background-color: #f6f8fa;
+    font-weight: 600;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  code {
+    background-color: #eff1f3;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 13px;
+    color: #cf222e;
+  }
+  pre {
+    background-color: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 14px;
+    overflow-x: auto;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .box {
+    background-color: #ddf4ff;
+    border-left: 4px solid #0969da;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .warning {
+    background-color: #ffebe9;
+    border-left: 4px solid #cf222e;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Ubuntu VPS Development & Linux Commands Guide</h1>
+<p><em>Quick reference guide for development server setup, directory structures, Docker workflows, and Linux command essentials.</em></p>
+
+<div class="box">
+  <strong>Server Overview (ls-infra-dev01):</strong><br>
+  RAM: <strong>311 GB</strong> (~308 GB free) | Disk: <strong>98 GB</strong> | OS: <strong>Ubuntu Linux</strong> | Primary Dev Path: <code>/home/tarun/apps/</code>
+</div>
+
+<h2>1. Recommended Server Directory Structure</h2>
+<pre>
+/home/tarun/
+├── apps/                 <-- All source code & git repositories live here
+│   ├── clarify/          <-- App 1: Source code, .env, docker-compose.yml
+│   └── open-seo/         <-- App 2: Source code, .env, docker-compose.yml
+│
+├── docker/               <-- Infrastructure & shared services
+│   ├── compose/          <-- Multi-container services (Reverse proxy, central DBs)
+│   └── volumes/          <-- Persistent database storage folders
+│
+├── scripts/              <-- Maintenance & automated backup scripts
+├── logs/                 <-- App and system logs
+└── backups/              <-- Database dumps and snapshots
+</pre>
+
+<h2>2. Everyday Development Workflow</h2>
+<ol>
+  <li><strong>Navigate to apps:</strong> <code>cd ~/apps</code></li>
+  <li><strong>Clone project:</strong> <code>git clone https://github.com/user/project.git</code></li>
+  <li><strong>Enter project:</strong> <code>cd project</code></li>
+  <li><strong>Setup environment:</strong> <code>cp .env.example .env && nano .env</code></li>
+  <li><strong>Run with Docker:</strong> <code>docker compose up -d</code></li>
+  <li><strong>Stop container:</strong> <code>docker compose down</code></li>
+</ol>
+
+<h2>3. File & Directory Management Commands</h2>
+
+<h3>A. Navigation & Location</h3>
+<table>
+  <tr><th>Goal</th><th>Command</th><th>Example</th></tr>
+  <tr><td>Where am I?</td><td><code>pwd</code></td><td><code>pwd</code></td></tr>
+  <tr><td>Go to directory</td><td><code>cd &lt;dir&gt;</code></td><td><code>cd apps</code></td></tr>
+  <tr><td>Go back one level</td><td><code>cd ..</code></td><td><code>cd ..</code></td></tr>
+  <tr><td>Go to user home (~/home/tarun)</td><td><code>cd ~</code></td><td><code>cd ~</code></td></tr>
+  <tr><td>List files & hidden files</td><td><code>ls -la</code></td><td><code>ls -la</code></td></tr>
+  <tr><td>View directory tree</td><td><code>tree -L 2</code></td><td><code>tree -L 2</code></td></tr>
+</table>
+
+<h3>B. Creating Files & Folders</h3>
+<table>
+  <tr><th>Goal</th><th>Command</th><th>Example</th></tr>
+  <tr><td>Create a folder</td><td><code>mkdir &lt;folder&gt;</code></td><td><code>mkdir clarify</code></td></tr>
+  <tr><td>Create nested folders</td><td><code>mkdir -p &lt;path&gt;</code></td><td><code>mkdir -p apps/clarify/data</code></td></tr>
+  <tr><td>Create empty file</td><td><code>touch &lt;file&gt;</code></td><td><code>touch .env</code></td></tr>
+  <tr><td>Create file with text</td><td><code>echo "text" &gt; &lt;file&gt;</code></td><td><code>echo "PORT=3000" &gt; .env</code></td></tr>
+  <tr><td>Create & edit file</td><td><code>nano &lt;file&gt;</code></td><td><code>nano docker-compose.yml</code></td></tr>
+</table>
+
+<h3>C. Copying & Moving</h3>
+<table>
+  <tr><th>Goal</th><th>Command</th><th>Example</th></tr>
+  <tr><td>Copy a file</td><td><code>cp &lt;src&gt; &lt;dest&gt;</code></td><td><code>cp .env.example .env</code></td></tr>
+  <tr><td>Copy an entire folder</td><td><code>cp -r &lt;src_dir&gt; &lt;dest_dir&gt;</code></td><td><code>cp -r clarify clarify-backup</code></td></tr>
+  <tr><td>Rename a file / folder</td><td><code>mv &lt;old&gt; &lt;new&gt;</code></td><td><code>mv temp-app clarify</code></td></tr>
+  <tr><td>Move file into folder</td><td><code>mv &lt;file&gt; &lt;folder&gt;/</code></td><td><code>mv .env apps/clarify/</code></td></tr>
+</table>
+
+<h3>D. Deleting Files & Folders</h3>
+<div class="warning">
+  <strong>Warning:</strong> Deletions in Linux are permanent (no Recycle Bin). Double check before pressing Enter.
+</div>
+<table>
+  <tr><th>Goal</th><th>Command</th><th>Example</th></tr>
+  <tr><td>Delete a file</td><td><code>rm &lt;file&gt;</code></td><td><code>rm old.log</code></td></tr>
+  <tr><td>Delete an empty folder</td><td><code>rmdir &lt;folder&gt;</code></td><td><code>rmdir empty-folder</code></td></tr>
+  <tr><td>Delete folder and all contents</td><td><code>rm -rf &lt;folder&gt;</code></td><td><code>rm -rf old-project/</code></td></tr>
+</table>
+
+<h3>E. Viewing & Searching Files</h3>
+<table>
+  <tr><th>Goal</th><th>Command</th><th>Description</th></tr>
+  <tr><td>Print entire file content</td><td><code>cat &lt;file&gt;</code></td><td>Prints content to terminal</td></tr>
+  <tr><td>Scroll through long file</td><td><code>less &lt;file&gt;</code></td><td>Press <code>q</code> to exit</td></tr>
+  <tr><td>Watch logs update live</td><td><code>tail -f &lt;file&gt;</code></td><td>Press <code>Ctrl + C</code> to stop</td></tr>
+  <tr><td>Find file by name</td><td><code>find . -name "&lt;name&gt;"</code></td><td><code>find . -name "*.env"</code></td></tr>
+  <tr><td>Search text inside files</td><td><code>grep -rn "&lt;text&gt;" .</code></td><td><code>grep -rn "DB_PORT" .</code></td></tr>
+</table>
+
+<h2>4. System Installation Commands (Run Once)</h2>
+<pre>
+# 1. Update OS and install Git & basic utilities
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y git curl wget unzip htop build-essential tree
+
+# 2. Install Docker & Docker Compose
+sudo apt install -y docker.io docker-compose-v2
+sudo usermod -aG docker $USER
+sudo systemctl enable --now docker
+newgrp docker
+
+# 3. Install Node.js LTS via NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+npm install -g pnpm pm2
+
+# 4. Verify everything
+git --version && docker --version && node -v && pnpm -v
+</pre>
+
+<h2>5. Essential Keyboard Shortcuts</h2>
+<ul>
+  <li><code>Tab</code>: Auto-complete file and directory names.</li>
+  <li><code>Up / Down Arrows</code>: Browse through previously executed commands.</li>
+  <li><code>Ctrl + C</code>: Kill / cancel any stuck or currently running command.</li>
+  <li><code>Ctrl + L</code>: Clear the terminal screen.</li>
+  <li><strong>Nano Editor:</strong> Press <code>Ctrl + O</code> then <code>Enter</code> to save; press <code>Ctrl + X</code> to exit.</li>
+</ul>
+
+</body>
+</html>
+
