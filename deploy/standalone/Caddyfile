@@ -1,4 +1,8 @@
-https://10.192.130.15 {
-    tls internal
-    reverse_proxy web:80
+{
+	default_sni 10.192.130.15
+}
+
+https://10.192.130.15, :443 {
+	tls internal
+	reverse_proxy web:80
 }
