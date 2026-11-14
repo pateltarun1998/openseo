@@ -95,6 +95,15 @@ services:
       init: { condition: service_completed_successfully }
       crawl-gateway: { condition: service_started }
     restart: unless-stopped
+  https:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      web: { condition: service_started }
 volumes:
   storage:
   runtime:

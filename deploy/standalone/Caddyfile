@@ -1,0 +1,4 @@
+https://10.192.130.15 {
+    tls internal
+    reverse_proxy web:80
+}
